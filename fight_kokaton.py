@@ -9,7 +9,7 @@ import pygame as pg
 WIDTH = 1600  # ゲームウィンドウの幅
 HEIGHT = 900  # ゲームウィンドウの高さ
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
-NUM_OF_BOMBS = 5  # 爆弾の数
+NUM_OF_BOMBS = 5  # 爆弾の個数
 
 
 def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
@@ -154,7 +154,7 @@ def main():
     # BombインスタンスがNUM個並んだリスト
     bombs = [Bomb() for _ in range(NUM_OF_BOMBS)]  
     beam = None
-
+    Beams = [] # ビームを入れるリスト
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -163,6 +163,7 @@ def main():
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:  # スペースキーが押されたら
                 beam = Beam(bird)  # ビームインスタンスの生成
+                Beams.append(beam) # リストにビームを追加
         
         screen.blit(bg_img, [0, 0])
         
@@ -176,18 +177,24 @@ def main():
 
         for i, bomb in enumerate(bombs):
             if beam is not None and beam.rct.colliderect(bomb.rct):
+                Beams.remove(beam)  # ビームをリストから削除
                 beam = None
                 bombs[i] = None
-                bird.change_img(6, screen)
-        # Noneでない爆弾だけのリストを作る
+                bird.change_img(6, screen) #笑顔
+        # Noneでない爆弾だけのリストを作る 
         bombs = [bomb for bomb in bombs if bomb is not None]
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
         for bomb in bombs:
             bomb.update(screen)
-        if beam is not None:
-            beam.update(screen)
+        # ビームインスタンスが生成されている場合
+        for beam in Beams:
+            if beam is not None:
+                beam.update(screen)
+                # 画面外に出たビームをリストから削除
+                if not beam.rct.colliderect(screen.get_rect()):
+                    Beams.remove(beam)
         pg.display.update()
         tmr += 1
         clock.tick(50)
