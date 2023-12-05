@@ -167,7 +167,7 @@ def main():
             if event.type == pg.QUIT:
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:  # スペースキーが押されたら
-                beam = Beam(bird)  # ビームインスタンスの生成
+                beam = Beam(bird) # ビームインスタンスの生成
                 Beams.append(beam) # リストにビームを追加
         
         screen.blit(bg_img, [0, 0])
@@ -202,7 +202,7 @@ def main():
                     Beams.remove(beam)
         pg.display.update()
         tmr += 1
-        clock.tick(70)
+        clock.tick(70) # こうかとんの速度
 
 
 if __name__ == "__main__":
