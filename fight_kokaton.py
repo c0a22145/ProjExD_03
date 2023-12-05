@@ -1,3 +1,4 @@
+import math
 import os
 import random
 import sys
@@ -55,17 +56,10 @@ class Bird:
             (0, +5): pg.transform.rotozoom(img, -90, 1.0),  # 下
             (+5, +5): pg.transform.rotozoom(img, -45, 1.0),  # 右下
         }
-        # self.img = pg.transform.flip(  # 左右反転
-        #     pg.transform.rotozoom(  # 2倍に拡大
-        #         pg.image.load(f"{MAIN_DIR}/fig/{num}.png"), 
-        #         0, 
-        #         2.0), 
-        #     True, 
-        #     False
-        # )
         self.img = self.imgs[(+5, 0)]  # 右向きこうかとんをデフォ画像にする
         self.rct = self.img.get_rect()
         self.rct.center = xy
+        self.dire=(+5, 0)
 
     def change_img(self, num: int, screen: pg.Surface):
         """
@@ -91,7 +85,8 @@ class Bird:
         if check_bound(self.rct) != (True, True):
             self.rct.move_ip(-sum_mv[0], -sum_mv[1])
         if not (sum_mv[0] == 0 and sum_mv[1] == 0):  # なにもキーが押されていなくなかったら
-            self.img = self.imgs[tuple(sum_mv)] 
+            self.dire = tuple(sum_mv)  # self.direをsum_mvで更新
+            self.img = self.imgs[self.dire]
         screen.blit(self.img, self.rct)
 
 
@@ -136,6 +131,16 @@ class Beam:
         self.rct.centery = bird.rct.centery   # こうかとんの中心座標を取得
         self.rct.centerx = bird.rct.centerx+bird.rct.width/2
         self.vx, self.vy = +5, 0
+        vx, vy = bird.dire#こうかとんの向いてる方向を代入
+        #回転部分
+        ang_r = math.atan2(vy, vx)
+        ang_d = math.degrees(ang_r)
+        self.img = pg.transform.rotate(self.img, -ang_d)
+        #初期位置について
+        self.rct.centerx = bird.rct.centerx + bird.rct.width * vx / 5
+        self.rct.centery = bird.rct.centery + bird.rct.height * vy / 5
+        self.vx, self.vy = vx, vy
+        
 
     def update(self, screen: pg.Surface):
         """
