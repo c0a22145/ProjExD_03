@@ -10,7 +10,7 @@ import pygame as pg
 WIDTH = 1600  # ゲームウィンドウの幅
 HEIGHT = 900  # ゲームウィンドウの高さ
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
-NUM_OF_BOMBS = 5  # 爆弾の個数
+NUM_OF_BOMBS = 7  # 爆弾の個数
 
 
 def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
@@ -101,14 +101,14 @@ class Bomb:
         """
         爆弾円Surfaceを生成する
         """
-        rad = random.randint(10, 100)
+        rad = random.randint(10, 60)
         self.img = pg.Surface((2*rad, 2*rad))
         color = random.choice(__class__.colors)  # Bomb.colors
         pg.draw.circle(self.img, color, (rad, rad), rad)
         self.img.set_colorkey((0, 0, 0))
         self.rct = self.img.get_rect()
         self.rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
-        self.vx, self.vy = random.choice([-5, +5]), random.choice([-5, +5])
+        self.vx, self.vy = random.choice([-6, +6]), random.choice([-5, +5])
 
     def update(self, screen: pg.Surface):
         """
@@ -202,7 +202,7 @@ def main():
                     Beams.remove(beam)
         pg.display.update()
         tmr += 1
-        clock.tick(50)
+        clock.tick(70)
 
 
 if __name__ == "__main__":
