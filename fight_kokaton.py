@@ -131,7 +131,7 @@ class Beam:
         self.rct.centery = bird.rct.centery   # こうかとんの中心座標を取得
         self.rct.centerx = bird.rct.centerx+bird.rct.width/2
         self.vx, self.vy = +5, 0
-        vx, vy = bird.dire#こうかとんの向いてる方向を代入
+        vx, vy = bird.dire # こうかとんの向いてる方向を代入
         #回転部分
         ang_r = math.atan2(vy, vx)
         ang_d = math.degrees(ang_r)
